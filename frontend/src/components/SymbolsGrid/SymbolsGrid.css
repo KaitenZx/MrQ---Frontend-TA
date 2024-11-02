@@ -1,0 +1,10 @@
+/* frontend/src/components/SymbolsGrid/SymbolsGrid.css */
+
+.symbolsGrid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	overflow-y: auto;
+	height: 100%;
+	padding: 16px;
+}

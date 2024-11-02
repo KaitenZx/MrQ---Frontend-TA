@@ -1,9 +1,9 @@
 /* frontend/src/components/SymbolCard/symbolCard.css */
 
 .symbolCard {
-  margin: 10px;
-  /* just for visibility, feel free to remove it */
   background-color: var(--card-bg-color);
+  min-width: 300px;
+  max-width: 500px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
@@ -64,7 +64,6 @@
 }
 
 .symbolCard__additional-info {
-  /*margin-top: 8px;*/
   background-color: var(--additional-info-bg);
   padding: 8px;
   border-radius: 4px;
