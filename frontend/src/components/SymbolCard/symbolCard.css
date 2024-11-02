@@ -1,7 +1,24 @@
+/* frontend/src/components/SymbolCard/symbolCard.css */
+
 .symbolCard {
-  border: 2px solid black; /* just for visibility, feel free to remove it */
-  margin: 10px; /* just for visibility, feel free to remove it */
-  padding: 10px; /* just for visibility, feel free to remove it */
+  margin: 10px;
+  /* just for visibility, feel free to remove it */
+  background-color: var(--card-bg-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.symbolCard--selected {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transform: scale(1.02);
+}
+
+.symbolCard--unselected {
+  transform: scale(0.98);
+  opacity: 0.8;
 }
 
 .symbolCard__shake {
@@ -9,6 +26,7 @@
 }
 
 @keyframes shake {
+
   10%,
   90% {
     transform: translateX(-2px);
@@ -35,4 +53,19 @@
   70% {
     transform: translateX(6px);
   }
+}
+
+.green-glow {
+  box-shadow: 0 0 10px green;
+}
+
+.red-glow {
+  box-shadow: 0 0 10px red;
+}
+
+.symbolCard__additional-info {
+  /*margin-top: 8px;*/
+  background-color: var(--additional-info-bg);
+  padding: 8px;
+  border-radius: 4px;
 }

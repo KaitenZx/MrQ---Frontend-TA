@@ -4,15 +4,15 @@ type ListItemProps = {
   Icon: React.ReactNode;
   label: string;
   spacing?:
-    | 'space-between'
-    | 'space-around'
-    | 'space-evenly'
-    | 'flex-start'
-    | 'flex-end'
-    | 'center'
-    | 'stretch'
-    | 'baseline'
-    | undefined;
+  | 'space-between'
+  | 'space-around'
+  | 'space-evenly'
+  | 'flex-start'
+  | 'flex-end'
+  | 'center'
+  | 'stretch'
+  | 'baseline'
+  | undefined;
 };
 const ListItem = ({ Icon, label, spacing }: ListItemProps) => {
   return (
@@ -23,4 +23,4 @@ const ListItem = ({ Icon, label, spacing }: ListItemProps) => {
   );
 };
 
-export default ListItem;
+export default React.memo(ListItem);

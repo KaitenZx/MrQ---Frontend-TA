@@ -2,11 +2,8 @@ import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import SymbolCard from '../SymbolCard';
 import { fetchAllStocks, selectors } from '@/store/stocksSlice';
-type SymbolsGridProps = {
-  onSymbolClick: (symbolId: string) => void;
-};
 
-const SymbolsGrid = ({ onSymbolClick }: SymbolsGridProps) => {
+const SymbolsGrid = () => {
   const stockSymbols = useAppSelector(selectors.selectStockIds);
   const prices = useAppSelector((state) => state.prices);
   const dispatch = useAppDispatch();
@@ -16,8 +13,8 @@ const SymbolsGrid = ({ onSymbolClick }: SymbolsGridProps) => {
 
   return (
     <div>
-      {stockSymbols.map((id, i) => (
-        <SymbolCard price={prices[id]} onClick={onSymbolClick} key={i} id={id} />
+      {stockSymbols.map(id => (
+        <SymbolCard price={prices[id]} key={id} id={id} />
       ))}
     </div>
   );
