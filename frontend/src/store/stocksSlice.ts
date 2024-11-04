@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, createEntityAdapter, EntityState } from '@reduxjs/toolkit';
 import { RootState } from '@/store/index';
 
 type Stock = {
@@ -10,37 +10,36 @@ type Stock = {
   trend: 'UP' | 'DOWN' | null;
 };
 
-type StockEntry = {
-  [key: string]: Stock;
-};
+const stocksAdapter = createEntityAdapter<Stock>({
+  selectId: (stock) => stock.symbol,
+});
 
-type StocksState = {
-  entities: StockEntry;
-  ids: string[];
+type StocksState = EntityState<Stock> & {
   apiState: {
     loading: boolean | null;
     error: boolean;
   };
 };
 
-const initialState: StocksState = {
-  entities: {},
-  ids: [],
+const initialState: StocksState = stocksAdapter.getInitialState({
   apiState: {
     loading: null,
-    error: false
-  }
-};
+    error: false,
+  },
+});
 
 export const fetchAllStocks = createAsyncThunk(
   'stocks/fetchAllStocks',
-  // if you type your function argument here
   async () => {
     const response = await fetch(`http://localhost:3100/api/stocks`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch stocks');
+    }
     return (await response.json()) as Stock[];
   }
 );
 
+// Существующие селекторы
 const selectStockIds = (state: RootState) => state.stocks.ids;
 const selectStocks = (state: RootState) => state.stocks.entities;
 const apiState = (state: RootState) => state.stocks.apiState;
@@ -50,40 +49,35 @@ const stocksSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    // Add reducers for additional action types here, and handle loading state as needed
-    builder.addCase(fetchAllStocks.fulfilled, (state, action) => {
-      // Add user to the state array
-      const map: StockEntry = {};
-      action.payload.forEach((e) => {
-        map[e.symbol] = e;
+    builder
+      .addCase(fetchAllStocks.pending, (state) => {
+        state.apiState.loading = true;
+        state.apiState.error = false;
+      })
+      .addCase(fetchAllStocks.fulfilled, (state, action) => {
+        stocksAdapter.setAll(state, action.payload);
+        state.apiState.loading = false;
+        state.apiState.error = false;
+      })
+      .addCase(fetchAllStocks.rejected, (state) => {
+        state.apiState.loading = false;
+        state.apiState.error = true;
       });
-      const ids = Object.keys(map);
-      const newState = { entities: map, ids };
-      state.apiState.error = false;
-      state.apiState.loading = false;
-      Object.assign(state, newState);
-      // console.log('fulfilled', action);
-    });
-
-    builder.addCase(fetchAllStocks.rejected, (state, action) => {
-      state.apiState.error = true;
-      state.apiState.loading = false;
-      // console.log('rejected', action);
-    });
-
-    builder.addCase(fetchAllStocks.pending, (state, action) => {
-      state.apiState.error = false;
-      state.apiState.loading = true;
-      // console.log('pending', action);
-    });
-  }
+  },
 });
 
-const selectors = {
+// Экспортируем адаптерные селекторы
+export const {
+  selectAll: selectAllStocks,
+  selectById: selectStockById,
+  selectIds: selectStockIdsAdapter,
+} = stocksAdapter.getSelectors<RootState>((state) => state.stocks);
+
+// Экспортируем существующие селекторы (не изменяем их)
+export const selectors = {
   selectStockIds,
   selectStocks,
-  apiState
+  apiState,
 };
 
 export default stocksSlice;
-export { selectors };

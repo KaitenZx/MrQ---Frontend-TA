@@ -1,20 +1,23 @@
+// frontend/src/components/SymbolsView/SymbolsView.tsx
+
 import SymbolsGrid from '@/components/SymbolsGrid';
 import PriceChart from '@/components/PriceChart';
 import DesktopInfo from './src/DesktopInfo';
-import { useState } from 'react';
+import './symbolsView.css';
+import { useAppSelector } from '@/hooks/redux';
 
 const SymbolsView = () => {
-  const [activeSymbol, setActiveSymbol] = useState<null | string>(null);
-
+  const selectedStockId = useAppSelector((state) => state.selectedStock.selectedStockId);
 
   return (
     <div className="symbolsView">
       <DesktopInfo />
-      <div className="symbolsView__chart">
-        <h3>PRICE HISTORY</h3>
-      </div>
+
       <div className="symbolsView__content">
-        <PriceChart symbolId={activeSymbol} />
+        <div className="symbolsView__chart">
+          <h3>PRICE HISTORY</h3>
+          {selectedStockId ? <PriceChart symbolId={selectedStockId} /> : <h3>Select a stock</h3>}
+        </div>
         <div className="symbolsView__cards">
           <SymbolsGrid />
         </div>

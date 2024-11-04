@@ -1,0 +1,42 @@
+.symbolsView {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	max-height: 100vh;
+	overflow: hidden;
+}
+
+.symbolsView__content {
+	display: flex;
+	flex-direction: row-reverse;
+	flex-grow: 1;
+	overflow-y: hidden;
+	padding-bottom: 8px;
+}
+
+.symbolsView__chart {
+	min-height: 330px;
+	min-width: 400px;
+	padding: 16px;
+}
+
+.symbolsView__cards {
+	overflow-y: auto;
+	flex-grow: 1;
+	background-color: var(--colorGrey);
+	box-sizing: border-box;
+	padding: 16px;
+	scrollbar-width: none;
+	border-radius: 4px;
+	width: 100%;
+}
+
+@media (max-width: 1023px) {
+	.symbolsView__content {
+		flex-direction: column;
+	}
+
+	.symbolsView__chart {
+		min-width: 100%;
+	}
+}

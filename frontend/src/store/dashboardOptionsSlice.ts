@@ -1,17 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { RootState } from '.';
 
-interface StoreState {
-  activeSymbol: string | null;
+interface DashboardOptionsState {
   showCardInfo: boolean;
 }
 
-const initialState: StoreState = {
-  activeSymbol: '',
+const initialState: DashboardOptionsState = {
   showCardInfo: true
 };
 
 export const dashboardOptionsSlice = createSlice({
-  name: 'store',
+  name: 'dashboardOptions',
   initialState,
   reducers: {
     toggleShowCardInfo: (state) => {
@@ -22,6 +21,7 @@ export const dashboardOptionsSlice = createSlice({
 
 export const { toggleShowCardInfo } = dashboardOptionsSlice.actions;
 
-export const selectShowCardInfo = (state: { store: StoreState }) => state.store.showCardInfo;
+// Обновленный селектор
+export const selectShowCardInfo = (state: RootState) => state.dashboardOptions.showCardInfo;
 
-export default dashboardOptionsSlice.reducer;
+export default dashboardOptionsSlice;
