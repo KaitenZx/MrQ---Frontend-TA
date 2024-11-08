@@ -1,21 +1,22 @@
-import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux';
+// frontend/src/components/SymbolsGrid/SymbolsGrid.tsx
+
+import React from 'react';
+import { useGetAllStocksQuery, selectAllStocks } from '@/services/stocksApi';
+import { useAppSelector } from '@/hooks/redux';
 import SymbolCard from '../SymbolCard';
-import { fetchAllStocks, selectors, selectAllStocks } from '@/store/stocksSlice';
 import './symbolsGrid.css';
 
-const SymbolsGrid = () => {
-  const dispatch = useAppDispatch();
+const SymbolsGrid: React.FC = () => {
+  const { data: stocksData, error, isLoading } = useGetAllStocksQuery();
   const stocks = useAppSelector(selectAllStocks);
   const prices = useAppSelector((state) => state.prices);
 
-  useEffect(() => {
-    dispatch(fetchAllStocks());
-  }, [dispatch]);
+  if (isLoading) return <div>Loading stocks...</div>;
+  if (error) return <div>Error loading stocks</div>;
 
   return (
     <div className='symbolsGrid'>
-      {stocks.map(stock => (
+      {stocks.map((stock) => (
         <SymbolCard
           key={stock.symbol}
           id={stock.symbol}

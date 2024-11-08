@@ -1,3 +1,5 @@
+// frontend/src/components/SymbolCard/SymbolCard.tsx
+
 import React, { useEffect, useState } from 'react';
 import './symbolCard.css';
 import { ReactComponent as CompanyIcon } from '@/assets/company.svg';
@@ -11,14 +13,14 @@ import CardHeader from './src/CardHeader';
 import useGlow from '@/hooks/useGlow';
 import useFormatMarketCap from '@/hooks/useFormatMarketCap';
 import { selectShowCardInfo } from '@/store/dashboardOptionsSlice';
-import { selectStockById } from '@/store/stocksSlice';
+import { selectStockById } from '@/services/stocksApi';
 
 type SymbolCardProps = {
   id: string;
   price: number;
 };
 
-const SymbolCard = ({ id, price }: SymbolCardProps) => {
+const SymbolCard: React.FC<SymbolCardProps> = ({ id, price }) => {
   const dispatch = useAppDispatch();
   const stock = useAppSelector((state) => selectStockById(state, id));
   const selectedStockId = useAppSelector((state) => state.selectedStock.selectedStockId);
@@ -29,17 +31,11 @@ const SymbolCard = ({ id, price }: SymbolCardProps) => {
   const [prevPrice, setPrevPrice] = useState(price);
   const [isShaking, setIsShaking] = useState(false);
 
-  if (!stock) {
-    return null;
-  }
-
-  const { trend, companyName, industry, marketCap } = stock;
-
   const priceChange = price - prevPrice;
   const shakeTrigger = price > prevPrice * 1.25 || price < prevPrice * 0.75;
 
   const glow = useGlow(priceChange, prevPrice);
-  const formattedMarketCap = useFormatMarketCap(marketCap);
+  const formattedMarketCap = useFormatMarketCap(stock?.marketCap ?? 0);
 
   useEffect(() => {
     if (price !== prevPrice) {
@@ -65,6 +61,12 @@ const SymbolCard = ({ id, price }: SymbolCardProps) => {
       dispatch(selectStock(id));
     }
   };
+
+  if (!stock) {
+    return null; // Или отображайте плейсхолдер/ошибку
+  }
+
+  const { trend, companyName, industry, marketCap } = stock;
 
   return (
     <div

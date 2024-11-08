@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+// frontend/src/components/PriceChart/PriceChart.tsx
+
+import React from 'react';
 import './priceChart.css';
-import { Line, LineChart, XAxis, YAxis, ResponsiveContainer } from 'recharts';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux';
-import { fetchPriceHistory, selectors } from '@/store/priceHistorySlice';
+import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts';
+import { useGetPriceHistoryQuery } from '@/services/priceHistoryApi';
 import Loading from '@/components/Loading';
 
 type PriceChartProps = {
@@ -10,44 +11,46 @@ type PriceChartProps = {
 };
 
 const PriceChart = ({ symbolId }: PriceChartProps) => {
-  const dispatch = useAppDispatch();
+  // Используем RTK Query hook для получения истории цен
+  const { data, error, isLoading, isFetching } = useGetPriceHistoryQuery(symbolId!, {
+    skip: !symbolId, // Пропуск запроса, если symbolId не задан
+  });
 
-  useEffect(() => {
-    if (!symbolId) return;
+  // Если ни одна акция не выбрана
+  if (!symbolId) {
+    return <div className="priceChart">Select stock</div>;
+  }
 
-    // Отправляем запрос и сохраняем промис
-    const fetchPromise = dispatch(fetchPriceHistory(symbolId));
-
-    // Функция очистки для отмены запроса при изменении symbolId или размонтировании компонента
-    return () => {
-      fetchPromise.abort();
-    };
-  }, [dispatch, symbolId]);
-
-  const apiState = useAppSelector(selectors.apiState);
-  const data = useAppSelector(selectors.selectPriceHistory);
-  const symbolInfo = useAppSelector(selectors.selectSymbolInfo);
-
-  if (apiState.loading && symbolId !== null)
+  // Если данные загружаются (первичная загрузка или обновление)
+  if (isLoading || isFetching) {
     return (
       <div className="priceChart">
         <Loading />
       </div>
     );
+  }
 
-  if (apiState.error) return <div className="priceChart">Failed to get price history!</div>;
-  if (!symbolId) return <div className="priceChart">Select stock</div>;
+  // Если произошла ошибка при загрузке данных
+  if (error) {
+    return <div className="priceChart">Failed to get price history!</div>;
+  }
+
+  // Если данные отсутствуют или история пустая
+  if (!data || !data.history.length) {
+    return <div className="priceChart">No price history available</div>;
+  }
+
+  // Преобразуем данные для использования с Recharts
+  const chartData = data.history.map((entry) => ({
+    time: new Date(entry.time).toLocaleTimeString(),
+    price: entry.price,
+  }));
 
   return (
     <div className="priceChart">
-      <div>{symbolInfo}</div>
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart
-          data={data.map((e) => ({
-            ...e,
-            time: new Date(e.time).toLocaleTimeString(),
-          }))}
-        >
+      {data.symbol && <div className="priceChart__symbol">{data.symbol}</div>}
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={chartData}>
           <Line type="monotone" dataKey="price" stroke="#8884d8" dot={false} />
           <XAxis dataKey="time" />
           <YAxis />
