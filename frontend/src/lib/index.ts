@@ -1,2 +1,3 @@
-// import { x } from './x';
-// export { x };
+import { Bias } from "./types/stockTypes"
+
+export type { Bias }

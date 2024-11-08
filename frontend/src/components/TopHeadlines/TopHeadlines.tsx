@@ -3,10 +3,10 @@ import './topHeadlines.css';
 
 import Row from '@/components/Row';
 import TopHeadline from './src/TopHeadline';
-import { stockTypes } from '@/lib/types';
+import { Bias } from '@/lib';
 
 type Headline = {
-  bias: stockTypes.Bias;
+  bias: Bias;
   headline: string;
 };
 

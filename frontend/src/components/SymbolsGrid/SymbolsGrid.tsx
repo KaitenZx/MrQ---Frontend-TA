@@ -1,23 +1,27 @@
-import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux';
-import SymbolCard from '../SymbolCard';
-import { fetchAllStocks, selectors } from '@/store/stocksSlice';
-type SymbolsGridProps = {
-  onSymbolClick: (symbolId: string) => void;
-};
+// frontend/src/components/SymbolsGrid/SymbolsGrid.tsx
 
-const SymbolsGrid = ({ onSymbolClick }: SymbolsGridProps) => {
-  const stockSymbols = useAppSelector(selectors.selectStockIds);
+import React from 'react';
+import { useGetAllStocksQuery, selectAllStocks } from '@/services/stocksApi';
+import { useAppSelector } from '@/hooks/redux';
+import SymbolCard from '../SymbolCard';
+import './symbolsGrid.css';
+
+const SymbolsGrid: React.FC = () => {
+  const { data: stocksData, error, isLoading } = useGetAllStocksQuery();
+  const stocks = useAppSelector(selectAllStocks);
   const prices = useAppSelector((state) => state.prices);
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(fetchAllStocks());
-  }, [dispatch]);
+
+  if (isLoading) return <div>Loading stocks...</div>;
+  if (error) return <div>Error loading stocks</div>;
 
   return (
-    <div>
-      {stockSymbols.map((id, i) => (
-        <SymbolCard price={prices[id]} onClick={onSymbolClick} key={i} id={id} />
+    <div className='symbolsGrid'>
+      {stocks.map((stock) => (
+        <SymbolCard
+          key={stock.symbol}
+          id={stock.symbol}
+          price={prices[stock.symbol]}
+        />
       ))}
     </div>
   );
