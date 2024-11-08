@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import './symbolPrice.css';
 
 type SymbolPriceProps = {
@@ -14,4 +14,4 @@ const SymbolPrice = ({ price }: SymbolPriceProps) => {
 	)
 }
 
-export default React.memo(SymbolPrice)
+export default memo(SymbolPrice)

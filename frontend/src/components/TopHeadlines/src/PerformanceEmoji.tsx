@@ -3,9 +3,9 @@ import { ReactComponent as HappyFace } from '@/assets/happy.svg';
 import { ReactComponent as NeutralFace } from '@/assets/neutral.svg';
 import { ReactComponent as SadFace } from '@/assets/sad.svg';
 import './performanceEmoji.css';
-import { stockTypes } from '@/lib/types';
+import { Bias } from '@/lib';
 type PerformanceEmojiProps = {
-  bias: stockTypes.Bias;
+  bias: Bias;
 };
 
 const PerformanceEmoji = ({ bias }: PerformanceEmojiProps) => {

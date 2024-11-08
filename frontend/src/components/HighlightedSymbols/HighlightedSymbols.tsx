@@ -1,4 +1,3 @@
-import React from 'react';
 import './highlightedSymbols.css';
 
 import PerformanceCard from '@/components/PerformanceCard';
@@ -58,7 +57,6 @@ const HighlightedSymbols = () => {
           <PerformanceCard
             change={symbol.change}
             key={index}
-            trend={symbol.trend}
             title={symbol.symbolId}
             volume={symbol.volume}
           />

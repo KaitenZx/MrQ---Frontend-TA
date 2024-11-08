@@ -21,7 +21,6 @@ export const dashboardOptionsSlice = createSlice({
 
 export const { toggleShowCardInfo } = dashboardOptionsSlice.actions;
 
-// Обновленный селектор
 export const selectShowCardInfo = (state: RootState) => state.dashboardOptions.showCardInfo;
 
 export default dashboardOptionsSlice;

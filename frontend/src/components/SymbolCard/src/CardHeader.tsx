@@ -1,10 +1,9 @@
-
-import upArrow from '../../../assets/up.png'; // Используем up.png
-import downArrow from '../../../assets/down.png'; // Используем down.png
+import upArrow from '../../../assets/up.png';
+import downArrow from '../../../assets/down.png';
 import './cardHeader.css';
-import React from 'react';
+import { memo } from 'react';
 
-type CardHeaderProps = {
+interface CardHeaderProps {
 	id: string;
 	trend: 'UP' | 'DOWN' | null;
 };
@@ -24,4 +23,4 @@ const CardHeader = ({ trend, id }: CardHeaderProps) => {
 	)
 }
 
-export default React.memo(CardHeader)
+export default memo(CardHeader)

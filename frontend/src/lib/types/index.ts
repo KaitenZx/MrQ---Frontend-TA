@@ -1,2 +1,2 @@
-import * as stockTypes from './stockTypes';
-export { stockTypes };
+export * as stockTypes from './stockTypes';
+

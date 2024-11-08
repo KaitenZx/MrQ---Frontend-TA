@@ -1,12 +1,6 @@
-// frontend/src/components/SymbolCard/SymbolCard.tsx
-
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import './symbolCard.css';
-import { ReactComponent as CompanyIcon } from '@/assets/company.svg';
-import { ReactComponent as MarketCapIcon } from '@/assets/market_cap.svg';
-import { ReactComponent as IndustryIcon } from '@/assets/industry.svg';
 import { useAppSelector, useAppDispatch } from '@/hooks/redux';
-import ListItem from '@/components/ListItem';
 import { selectStock, deselectStock } from '@/store/selectedStockSlice';
 import SymbolPrice from './src/SymbolPrice';
 import CardHeader from './src/CardHeader';
@@ -14,13 +8,14 @@ import useGlow from '@/hooks/useGlow';
 import useFormatMarketCap from '@/hooks/useFormatMarketCap';
 import { selectShowCardInfo } from '@/store/dashboardOptionsSlice';
 import { selectStockById } from '@/services/stocksApi';
+import CardAdditionalInfo from './src/CardAdditionalInfo';
 
-type SymbolCardProps = {
+interface SymbolCardProps {
   id: string;
   price: number;
 };
 
-const SymbolCard: React.FC<SymbolCardProps> = ({ id, price }) => {
+const SymbolCard = ({ id, price }: SymbolCardProps) => {
   const dispatch = useAppDispatch();
   const stock = useAppSelector((state) => selectStockById(state, id));
   const selectedStockId = useAppSelector((state) => state.selectedStock.selectedStockId);
@@ -63,10 +58,10 @@ const SymbolCard: React.FC<SymbolCardProps> = ({ id, price }) => {
   };
 
   if (!stock) {
-    return null; // Или отображайте плейсхолдер/ошибку
+    return null;
   }
 
-  const { trend, companyName, industry, marketCap } = stock;
+  const { trend, companyName, industry } = stock;
 
   return (
     <div
@@ -81,15 +76,15 @@ const SymbolCard: React.FC<SymbolCardProps> = ({ id, price }) => {
       <CardHeader trend={trend} id={id} />
 
       <SymbolPrice price={price?.toFixed(0)} />
-      {showCardInfo && (
-        <div className="symbolCard__additional-info">
-          <ListItem spacing='space-between' Icon={<CompanyIcon />} label={companyName} />
-          <ListItem spacing='space-between' Icon={<IndustryIcon />} label={industry} />
-          <ListItem spacing='space-between' Icon={<MarketCapIcon />} label={formattedMarketCap} />
-        </div>
-      )}
+      {showCardInfo &&
+        <CardAdditionalInfo
+          companyName={companyName}
+          industry={industry}
+          formattedMarketCap={formattedMarketCap}
+        />
+      }
     </div>
   );
 };
 
-export default React.memo(SymbolCard);
+export default memo(SymbolCard);

@@ -1,8 +1,5 @@
-// frontend/src/services/priceHistoryApi.ts
-
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-// Определяем типы данных
 type HistoryEntry = {
 	time: number;
 	price: number;
@@ -13,7 +10,6 @@ type PriceHistoryResponse = {
 	history: HistoryEntry[];
 };
 
-// Создаем API Slice
 export const priceHistoryApi = createApi({
 	reducerPath: 'priceHistoryApi',
 	baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3100/api/' }),
@@ -26,5 +22,4 @@ export const priceHistoryApi = createApi({
 	}),
 });
 
-// Экспортируем hooks для использования в компонентах
 export const { useGetPriceHistoryQuery } = priceHistoryApi;

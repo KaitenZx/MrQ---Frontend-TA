@@ -1,5 +1,3 @@
-// frontend/src/store/selectedStockSlice.ts
-
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface SelectedStockState {
